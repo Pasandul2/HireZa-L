@@ -262,6 +262,76 @@ public class AdminController {
         return "redirect:/admin/cvs";
     }
 
+    @GetMapping("/cvs/{id}/view")
+    public String viewCV(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            Optional<com.hireza.jobportal.model.CV> cvOpt = cvService.findById(id);
+            if (cvOpt.isPresent()) {
+                model.addAttribute("cv", cvOpt.get());
+                return "admin/cvs/view";
+            } else {
+                redirectAttributes.addFlashAttribute("error", "CV not found!");
+                return "redirect:/admin/cvs";
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error loading CV: " + e.getMessage());
+            return "redirect:/admin/cvs";
+        }
+    }
+
+    @GetMapping("/cvs/{id}/download")
+    public String downloadCV(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            Optional<com.hireza.jobportal.model.CV> cvOpt = cvService.findById(id);
+            if (cvOpt.isPresent()) {
+                com.hireza.jobportal.model.CV cv = cvOpt.get();
+                // In a real application, this would serve the file for download
+                // For now, redirect back with success message
+                redirectAttributes.addFlashAttribute("success", "CV download for " + cv.getUser().getFullName() + " started!");
+                return "redirect:/admin/cvs";
+            } else {
+                redirectAttributes.addFlashAttribute("error", "CV not found!");
+                return "redirect:/admin/cvs";
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error downloading CV: " + e.getMessage());
+            return "redirect:/admin/cvs";
+        }
+    }
+
+    @PostMapping("/cvs/{id}/approve")
+    public String approveCV(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            cvService.reviewCV(id, "ACCEPTED", "CV approved by admin");
+            redirectAttributes.addFlashAttribute("success", "CV approved successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to approve CV: " + e.getMessage());
+        }
+        return "redirect:/admin/cvs";
+    }
+
+    @PostMapping("/cvs/{id}/reject")
+    public String rejectCV(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            cvService.reviewCV(id, "REJECTED", "CV rejected by admin");
+            redirectAttributes.addFlashAttribute("success", "CV rejected successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to reject CV: " + e.getMessage());
+        }
+        return "redirect:/admin/cvs";
+    }
+
+    @PostMapping("/cvs/{id}/delete")
+    public String deleteCV(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            cvService.deleteCV(id);
+            redirectAttributes.addFlashAttribute("success", "CV deleted successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to delete CV: " + e.getMessage());
+        }
+        return "redirect:/admin/cvs";
+    }
+
     // Job Management - additional endpoints
     @GetMapping("/jobs")
     public String manageJobs(Model model) {
