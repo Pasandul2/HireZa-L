@@ -321,7 +321,7 @@ public class UserController {
             User user = userOpt.get();
             model.addAttribute("user", user);
             model.addAttribute("messages", messageService.getMessagesByUser(user));
-            model.addAttribute("unreadMessages", messageService.getUnreadMessagesByUser(user));
+            model.addAttribute("unreadMessages", messageService.getUnreadMessageCount(user));
             model.addAttribute("totalMessages", messageService.getTotalMessageCount(user));
             model.addAttribute("jobSuggestionMessages", messageService.getMessagesByType(user, MessageType.JOB_SUGGESTION));
         }

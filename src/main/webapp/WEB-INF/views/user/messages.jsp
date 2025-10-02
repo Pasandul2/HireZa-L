@@ -42,8 +42,8 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="/user/messages">
                             <i class="fas fa-envelope me-1"></i>Messages
-                            <c:if test="${unreadMessages.size() > 0}">
-                                <span class="badge bg-danger">${unreadMessages.size()}</span>
+                            <c:if test="${unreadMessages > 0}">
+                                <span class="badge bg-danger">${unreadMessages}</span>
                             </c:if>
                         </a>
                     </li>
@@ -102,7 +102,7 @@
             </div>
             <div class="text-end">
                 <span class="badge bg-primary">${totalMessages} total</span>
-                <span class="badge bg-warning">${unreadMessages.size()} unread</span>
+                <span class="badge bg-warning">${unreadMessages} unread</span>
             </div>
         </div>
 
@@ -133,7 +133,7 @@
                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                     Unread Messages
                                 </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">${unreadMessages.size()}</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">${unreadMessages}</div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-exclamation-circle fa-2x text-gray-300"></i>
@@ -201,13 +201,13 @@
                                             <div class="d-flex justify-content-between align-items-start mb-2">
                                                 <h6 class="mb-1 ${message.isRead ? '' : 'fw-bold'}">
                                                     <c:choose>
-                                                        <c:when test="${message.messageType == 'JOB_SUGGESTION'}">
+                                                        <c:when test="${message.messageType.name() == 'JOB_SUGGESTION'}">
                                                             <i class="fas fa-lightbulb text-warning me-2"></i>
                                                         </c:when>
-                                                        <c:when test="${message.messageType == 'CV_FEEDBACK'}">
+                                                        <c:when test="${message.messageType.name() == 'CV_ACCEPTED' || message.messageType.name() == 'CV_REJECTED'}">
                                                             <i class="fas fa-file-text text-info me-2"></i>
                                                         </c:when>
-                                                        <c:when test="${message.messageType == 'SYSTEM'}">
+                                                        <c:when test="${message.messageType.name() == 'SESSION_REMINDER'}">
                                                             <i class="fas fa-cog text-secondary me-2"></i>
                                                         </c:when>
                                                         <c:otherwise>

@@ -175,7 +175,16 @@
                                                 <i class="fas fa-tag me-1"></i>${job.category}
                                             </small>
                                         </p>
-                                        <p class="card-text">${job.description.length() > 100 ? job.description.substring(0, 100) + '...' : job.description}</p>
+                                        <p class="card-text">
+                                            <c:choose>
+                                                <c:when test="${job.description.length() > 100}">
+                                                    ${job.description.substring(0, 100)}...
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${job.description}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
                                     </div>
                                     <div class="card-footer">
                                         <sec:authorize access="hasRole('USER')">

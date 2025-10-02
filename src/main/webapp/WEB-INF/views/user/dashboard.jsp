@@ -234,11 +234,11 @@
                             <c:when test="${not empty recentMessages}">
                                 <div class="list-group list-group-flush">
                                     <c:forEach var="message" items="${recentMessages}">
-                                        <div class="list-group-item ${!message.read ? 'list-group-item-light' : ''}">
+                                        <div class="list-group-item ${!message.isRead ? 'list-group-item-light' : ''}">
                                             <div class="d-flex w-100 justify-content-between">
                                                 <h6 class="mb-1">
                                                     ${message.subject}
-                                                    <c:if test="${!message.read}">
+                                                    <c:if test="${!message.isRead}">
                                                         <span class="badge bg-warning">New</span>
                                                     </c:if>
                                                 </h6>
