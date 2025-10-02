@@ -27,4 +27,6 @@ public interface JobSuggestionRepository extends JpaRepository<JobSuggestion, Lo
     
     @Query("SELECT COUNT(js) FROM JobSuggestion js WHERE js.user = :user")
     long countByUser(@Param("user") User user);
+    
+    List<JobSuggestion> findAllByOrderBySuggestedAtDesc();
 }

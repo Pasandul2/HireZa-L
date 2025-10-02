@@ -26,6 +26,9 @@ public class CounselorController {
     
     @Autowired
     private JobService jobService;
+    
+    @Autowired
+    private JobSuggestionService jobSuggestionService;
 
     @GetMapping("/dashboard")
     public String dashboard(Authentication authentication, Model model) {
@@ -160,9 +163,8 @@ public class CounselorController {
             Optional<Job> jobOpt = jobService.getJobById(jobId);
             
             if (counselorOpt.isPresent() && userOpt.isPresent() && jobOpt.isPresent()) {
-                // TODO: Implement JobSuggestionService
-                // jobSuggestionService.createSuggestion(counselorOpt.get(), userOpt.get(), jobOpt.get(), message);
-                redirectAttributes.addFlashAttribute("success", "Job suggestion sent successfully!");
+                jobSuggestionService.createSuggestion(counselorOpt.get(), userOpt.get(), jobOpt.get(), message);
+                redirectAttributes.addFlashAttribute("success", "Job suggestion sent successfully! The user has been notified.");
             } else {
                 redirectAttributes.addFlashAttribute("error", "Invalid user, job, or counselor!");
             }
