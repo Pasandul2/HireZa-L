@@ -138,14 +138,26 @@ public class CounselorController {
     // ===== JOB SUGGESTIONS =====
     
     @GetMapping("/suggestions")
-    public String suggestions(Model model) {
+    public String suggestions(Model model, Authentication authentication) {
+        String email = authentication.getName();
+        Optional<User> counselorOpt = userService.findByEmail(email);
+        
+        if (counselorOpt.isPresent()) {
+            User counselor = counselorOpt.get();
+            List<JobSuggestion> mySuggestions = jobSuggestionService.getSuggestionsByCounselor(counselor);
+            model.addAttribute("suggestions", mySuggestions);
+            model.addAttribute("totalSuggestions", mySuggestions.size());
+        } else {
+            model.addAttribute("suggestions", java.util.Collections.emptyList());
+            model.addAttribute("totalSuggestions", 0);
+        }
+        
         // Get all active users and jobs for suggestions
         List<User> users = userService.getUsersByRole(Role.USER);
         List<Job> jobs = jobService.getActiveJobs();
         
         model.addAttribute("users", users);
         model.addAttribute("jobs", jobs);
-        model.addAttribute("suggestions", java.util.Collections.emptyList()); // TODO: Implement JobSuggestionService
         
         return "counselor/suggestions";
     }

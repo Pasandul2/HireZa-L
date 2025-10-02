@@ -4,6 +4,7 @@ D:\HireZa L\src\main\java\com\hireza\jobportal\repository\UserRepository.java
 D:\HireZa L\src\main\java\com\hireza\jobportal\controller\UserController.java
 D:\HireZa L\src\main\java\com\hireza\jobportal\model\Session.java
 D:\HireZa L\src\main\java\com\hireza\jobportal\repository\SessionRepository.java
+D:\HireZa L\src\main\java\com\hireza\jobportal\service\JobSuggestionService.java
 D:\HireZa L\src\main\java\com\hireza\jobportal\config\SecurityConfig.java
 D:\HireZa L\src\main\java\com\hireza\jobportal\model\SessionStatus.java
 D:\HireZa L\src\main\java\com\hireza\jobportal\service\CustomUserDetailsService.java
@@ -17,6 +18,7 @@ D:\HireZa L\src\main\java\com\hireza\jobportal\config\DataInitializer.java
 D:\HireZa L\src\main\java\com\hireza\jobportal\controller\AuthController.java
 D:\HireZa L\src\main\java\com\hireza\jobportal\repository\JobSuggestionRepository.java
 D:\HireZa L\src\main\java\com\hireza\jobportal\model\User.java
+D:\HireZa L\src\main\java\com\hireza\jobportal\service\MessageService.java
 D:\HireZa L\src\main\java\com\hireza\jobportal\service\JobService.java
 D:\HireZa L\src\main\java\com\hireza\jobportal\model\JobType.java
 D:\HireZa L\src\main\java\com\hireza\jobportal\JobPortalApplication.java

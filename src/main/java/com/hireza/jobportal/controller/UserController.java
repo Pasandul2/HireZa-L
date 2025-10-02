@@ -1,11 +1,7 @@
 package com.hireza.jobportal.controller;
 
-import com.hireza.jobportal.model.CV;
-import com.hireza.jobportal.model.Job;
-import com.hireza.jobportal.model.User;
-import com.hireza.jobportal.service.CVService;
-import com.hireza.jobportal.service.JobService;
-import com.hireza.jobportal.service.UserService;
+import com.hireza.jobportal.model.*;
+import com.hireza.jobportal.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -30,6 +26,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private MessageService messageService;
+    
+    @Autowired
+    private JobSuggestionService jobSuggestionService;
 
     @GetMapping("/dashboard")
     public String dashboard(Authentication authentication, Model model) {
@@ -46,8 +48,10 @@ public class UserController {
             model.addAttribute("availableJobs", jobService.getActiveJobCount());
             model.addAttribute("cvStatus", cvService.hasUserSubmittedCV(user) ? "SUBMITTED" : null);
             model.addAttribute("upcomingSessions", 0); // TODO: Implement session service
-            model.addAttribute("unreadMessages", 0); // TODO: Implement message service
-            model.addAttribute("recentMessages", java.util.Collections.emptyList()); // TODO: Implement message service
+            model.addAttribute("unreadMessages", messageService.getUnreadMessageCount(user));
+            model.addAttribute("recentMessages", messageService.getMessagesByUser(user));
+            model.addAttribute("jobSuggestions", jobSuggestionService.getSuggestionsByUser(user));
+            model.addAttribute("totalSuggestions", jobSuggestionService.getSuggestionCountByUser(user));
             model.addAttribute("upcomingSessionsList", java.util.Collections.emptyList()); // TODO: Implement session service
         }
         
@@ -306,5 +310,48 @@ public class UserController {
             redirectAttributes.addFlashAttribute("error", "Error applying for job: " + e.getMessage());
             return "redirect:/user/jobs";
         }
+    }
+    
+    @GetMapping("/messages")
+    public String messages(Authentication authentication, Model model) {
+        String email = authentication.getName();
+        Optional<User> userOpt = userService.findByEmail(email);
+        
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            model.addAttribute("user", user);
+            model.addAttribute("messages", messageService.getMessagesByUser(user));
+            model.addAttribute("unreadMessages", messageService.getUnreadMessagesByUser(user));
+            model.addAttribute("totalMessages", messageService.getTotalMessageCount(user));
+            model.addAttribute("jobSuggestionMessages", messageService.getMessagesByType(user, MessageType.JOB_SUGGESTION));
+        }
+        
+        return "user/messages";
+    }
+    
+    @PostMapping("/messages/{id}/read")
+    public String markMessageAsRead(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            messageService.markAsRead(id);
+            redirectAttributes.addFlashAttribute("success", "Message marked as read.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error marking message as read: " + e.getMessage());
+        }
+        return "redirect:/user/messages";
+    }
+    
+    @GetMapping("/suggestions")
+    public String suggestions(Authentication authentication, Model model) {
+        String email = authentication.getName();
+        Optional<User> userOpt = userService.findByEmail(email);
+        
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            model.addAttribute("user", user);
+            model.addAttribute("suggestions", jobSuggestionService.getSuggestionsByUser(user));
+            model.addAttribute("totalSuggestions", jobSuggestionService.getSuggestionCountByUser(user));
+        }
+        
+        return "user/suggestions";
     }
 }

@@ -29,4 +29,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     
     @Query("SELECT m FROM Message m WHERE m.sender = :sender AND m.user = :user ORDER BY m.sentAt DESC")
     List<Message> findBySenderAndUserOrderBySentAtDesc(@Param("sender") User sender, @Param("user") User user);
+    
+    long countByUserAndIsReadFalse(User user);
+    
+    long countByUser(User user);
 }
